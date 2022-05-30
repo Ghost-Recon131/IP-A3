@@ -127,7 +127,8 @@ def save_changes_and_exit(file_name):
     global stock_dictionary
     global column_line
 
-    print("Confirm ")
+    show_all_items_info()
+    print("\nPlease check current stock values and confirm if you want to exit. \n")
     ret_value = confirm_exit()
 
     if not ret_value:
@@ -216,7 +217,7 @@ def show_item_info():
     global stock_dictionary
     item_id = get_user_input_string("Please enter the item ID: ")
     if check_item_exists(item_id):
-        print(stock_dictionary.get(item_id).display_item_attributes(), end="")
+        print(stock_dictionary.get(item_id).get_all_item_attributes())
     else:
         print("Entered item ID does not exist")
 
