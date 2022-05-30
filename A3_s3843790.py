@@ -8,10 +8,90 @@
 stock_dictionary = {}
 
 
+# Define class for stock objects
+class StockItem:
+
+    def __init__(self, item_id, item_price, quantity, item_name, item_description, item_warranty):
+        self.item_id = item_id
+        self.item_price = item_price
+        self.quantity = quantity
+        self.item_name = item_name
+        self.item_description = item_description
+        self.item_warranty = item_warranty
+
+    # This method prints the object's values
+    def display_item_attributes(self):
+        # item_attributes = self.item_id + " | " + str(self.item_price) + " | " + str(self.quantity) + " | " \
+        #                   + self.item_name + " | " + self.item_description + " | " + self.item_warranty
+        print(self.item_id, self.item_price, self.quantity, self.item_name, self.item_description, self.item_warranty,
+              end="")
+
+    # Getters
+    def get_item_price(self):
+        return self.item_price
+
+    def get_quantity(self):
+        return self.quantity
+
+    def get_item_name(self):
+        return self.item_name
+
+    def get_item_description(self):
+        return self.item_description
+
+    def get_item_warranty(self):
+        return self.item_warranty
+
+    # Setters
+    def set_item_price(self, price):
+        self.item_price = price
+
+    def set_quantity(self, quantity):
+        self.quantity = quantity
+
+    def set_item_name(self, name):
+        self.item_name = name
+
+    def set_item_description(self, description):
+        self.item_description = description
+
+    def set_item_warranty(self, warranty):
+        self.item_warranty = warranty
+
+
+# Method to calculate inventory value (total stock cost)
+def get_inventory_value():
+    global stock_dictionary
+    value = 0.0
+    for item in stock_dictionary:
+        value += stock_dictionary[item].get_item_price()
+    return value
+
+
 # Read the stock file and initiate the data structures
 def read_stock(file_name):
-    # TODO
-    print("Loaded values")
+    global stock_dictionary
+
+    # attempt to read data from file
+    try:
+        file_handler = open(file_name, "r")
+
+        # Ignore the column description first line
+        column_line = file_handler.readline()
+        for line in file_handler:
+            # split the line by ',' then create a new stock_item object with the various attributes
+            data = line.split(", ")
+            stock_object = StockItem(data[0], float(data[1]), int(data[2]), data[3], data[4], data[5])
+
+            # uses item ID as dictionary key, then object as the value
+            stock_dictionary[data[0]] = stock_object
+
+        # prints the column structure & item attributes
+        print(column_line, end="")
+        show_all_items_info()
+        print("\n\nCurrent stock value: $", get_inventory_value())
+    except:
+        print("File may be corrupted or contains invalid values")
 
 
 # Export the changes to a given filename
@@ -28,7 +108,7 @@ def get_user_input_int(text_prompt):
     # continue asking for user_input until user_input is correct
     while continue_loop:
         try:
-            user_in = int(input("Please enter your choice as an integer: "))
+            user_in = int(input(text_prompt))
             continue_loop = False
         except:
             print("You did not enter a valid integer! \n")
@@ -81,15 +161,20 @@ def validate_userinput_int(user_input, max_option):
 
 # This function gets the information of a single item and prints it to the user
 def show_item_info():
+    global stock_dictionary
     item_id = get_user_input_string("Please enter the item ID: ")
-    # TODO
-    print("Item infor for " + item_id)
+
+    try:
+        stock_dictionary.get(item_id).display_item_attributes()
+    except:
+        print("Entered item ID does not exist")
 
 
 # This function gets the information for all items and prints it to the user
 def show_all_items_info():
-    # TODO
-    print("Prints all items")
+    global stock_dictionary
+    for item in stock_dictionary:
+        stock_dictionary[item].display_item_attributes()
 
 
 # This function tries to add a new item to stock
@@ -137,6 +222,7 @@ def exit_without_saving():
 
 # Main menu of the program
 def main_menu():
+    # Read data from file
     read_stock("A3_s3843790_stock.txt")
 
     # Set the menu options and welcome text
@@ -155,7 +241,7 @@ def main_menu():
     continue_program = True
     while continue_program:
         print(menu_options)
-        user_choice = get_user_input_int("")
+        user_choice = get_user_input_int("Please enter an integer to select an option: ")
 
         # Check that the user's entered int is part of the avaliable options in the menu
         if validate_userinput_int(user_choice, 7):
