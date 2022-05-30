@@ -127,21 +127,26 @@ def save_changes_and_exit(file_name):
     global stock_dictionary
     global column_line
 
-    try:
-        output_file_handler = open(file_name, "w")
+    print("Confirm ")
+    ret_value = confirm_exit()
 
-        # Write the column structure
-        output_file_handler.write(column_line)
+    if not ret_value:
+        try:
+            output_file_handler = open(file_name, "w")
 
-        # Loop through dictionary and write all items to file
-        for item in stock_dictionary:
-            output_file_handler.write(stock_dictionary[item].prepare_csv_output())
-            # Write new line to separate items
-            output_file_handler.write('\n')
+            # Write the column structure
+            output_file_handler.write(column_line)
 
-        output_file_handler.close()
-    except:
-        print("Failed to export file")
+            # Loop through dictionary and write all items to file
+            for item in stock_dictionary:
+                output_file_handler.write(stock_dictionary[item].prepare_csv_output())
+                # Write new line to separate items
+                output_file_handler.write('\n')
+
+            output_file_handler.close()
+        except:
+            print("Failed to export file")
+    return ret_value
 
 
 # This function gets user user_input & validates it is a correct integer
@@ -324,12 +329,15 @@ def remove_item():
 # This function checks if the user really wants to leave without saving
 def exit_without_saving():
     print("Are you sure you want to leave without saving? Any changes will be lost!")
-
     # This value tells the main program whether to continue running: true = keep running, false = end program
-    ret_value = None
+    return confirm_exit()
 
-    # This loop keeps asking for user input until one of the two valid options is entered
+
+# Confirms with user if they really do want to exiT
+def confirm_exit():
     incorrect_input = True
+    ret_value = None
+    # This loop keeps asking for user input until one of the two valid options is entered
     while incorrect_input:
         user_input = get_user_input_string("Confirm (y/n): ")
         if user_input.upper() == "Y":
@@ -340,8 +348,8 @@ def exit_without_saving():
             incorrect_input = False
         else:
             print("Invalid input! y/n only! \n")
-
     return ret_value
+
 
 
 # Main menu of the program
@@ -383,8 +391,7 @@ def main_menu():
             elif user_choice == 5:
                 remove_item()
             elif user_choice == 6:
-                save_changes_and_exit("updated_A3_s3843790_stock.txt")
-                continue_program = False
+                continue_program = save_changes_and_exit("updated_A3_s3843790_stock.txt")
             elif user_choice == 7:
                 continue_program = exit_without_saving()
 
