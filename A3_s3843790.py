@@ -213,9 +213,8 @@ def validate_userinput_int(user_input, max_option):
 
 
 # This function gets the information of a single item and prints it to the user
-def show_item_info():
+def show_item_info(item_id):
     global stock_dictionary
-    item_id = get_user_input_string("Please enter the item ID: ")
     if check_item_exists(item_id):
         print(stock_dictionary.get(item_id).get_all_item_attributes())
     else:
@@ -326,6 +325,8 @@ def update_item_info():
 
         # Save back to dictionary
         stock_dictionary[item_id] = item_to_edit
+        # Show user updated item info
+        show_item_info(item_id)
 
 
 # This function tries to remove an existing item
@@ -393,7 +394,7 @@ def main_menu():
         # Check that the user's entered int is part of the available options in the menu
         if validate_userinput_int(user_choice, 7):
             if user_choice == 1:
-                show_item_info()
+                show_item_info(get_user_input_string("Please enter the item ID: "))
             elif user_choice == 2:
                 show_all_items_info()
             elif user_choice == 3:
