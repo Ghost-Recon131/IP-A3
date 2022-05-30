@@ -4,6 +4,15 @@
 # Student number: s3843790
 # Practical group : 8 (Thursday 14:30-16:30)
 
+"""
+References
+Used Scorptec to get some product ID and pricing
+
+[1] favtutor, ‘Sort a List of Objects in Python’, FavTutor. https://favtutor.com/blogs/sort-list-of-objects-python (accessed May 30, 2022).
+[2] ‘Scorptec Computers | Online Computer Store, Huge Range of the Best Brands, Fast Delivery, Laptops and Gaming’. https://www.scorptec.com.au/ (accessed May 30, 2022).
+
+"""
+
 # Global dictionary for storing stock
 stock_dictionary = {}
 
@@ -27,6 +36,9 @@ class StockItem:
               end="")
 
     # Getters
+    def get_item_id(self):
+        return self.item_id
+
     def get_item_price(self):
         return self.item_price
 
@@ -87,9 +99,14 @@ def read_stock(file_name):
             stock_dictionary[data[0]] = stock_object
 
         # prints the column structure & item attributes
-        print(column_line, end="")
-        show_all_items_info()
-        print("\n\nCurrent stock value: $", get_inventory_value())
+        heading = "----------------------------------------------\n" \
+                  "Loading Original Data\n" \
+                  "----------------------------------------------"
+        print(heading)
+        print("Loading data from file:", file_name)
+        print("Column titles in loaded file is:", column_line, end="")
+        show_all_items_id()
+        print("Current stock value: $", get_inventory_value(), end="")
     except:
         print("File may be corrupted or contains invalid values")
 
@@ -170,17 +187,38 @@ def show_item_info():
         print("Entered item ID does not exist")
 
 
+# This functions shows the item ID of all items loaded in memory
+def show_all_items_id():
+    global stock_dictionary
+    print("Items in inventory are: ", end="")
+    for item in stock_dictionary:
+        print(stock_dictionary[item].get_item_id(), end=", ")
+    print("\n")
+
+
 # This function gets the information for all items and prints it to the user
 def show_all_items_info():
     global stock_dictionary
+    stock_list = []
+
+    # Add all dictionary objects to list
     for item in stock_dictionary:
-        stock_dictionary[item].display_item_attributes()
+        stock_list.append(stock_dictionary[item])
+
+    # Referenced [1], sorts the items based on the item name
+    stock_list.sort(key=lambda x: x.item_name)
+    print("Displaying all items in inventory (Sorted alphabetically by item name not item ID)")
+    for stock in stock_list:
+        stock.display_item_attributes()
 
 
 # This function tries to add a new item to stock
 def add_new_item():
-    # TODO
-    print("Added item!")
+    new_item_id = get_user_input_string("Please enter the item ID: ")
+    new_item_price = get_user_input_float("Please enter the item price: ")
+    new_item_quantity = get_user_input_int("Please enter the item quantity: ")
+    new_item_name = get_user_input_string("Please enter the item name: ")
+    new_item_description = get_user_input_string("Please enter the item description: ")
 
 
 # This function tries to update an existing item
@@ -192,9 +230,12 @@ def update_item_info():
 
 # This function tries to remove an existing item
 def remove_item():
+    global stock_dictionary
     item_id = get_user_input_string("Please enter the item ID: ")
-    # TODO
-    print("Removed item " + item_id)
+    try:
+        del stock_dictionary[item_id]
+    except:
+        print("Entered item ID does not exist")
 
 
 # This function checks if the user really wants to leave without saving
@@ -241,6 +282,9 @@ def main_menu():
     continue_program = True
     while continue_program:
         print(menu_options)
+        # print out all current items for user
+        show_all_items_id()
+
         user_choice = get_user_input_int("Please enter an integer to select an option: ")
 
         # Check that the user's entered int is part of the avaliable options in the menu
