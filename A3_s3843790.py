@@ -304,6 +304,17 @@ def update_item_info():
         # Get the object from the dictionary
         item_to_edit = stock_dictionary.get(item_id)
 
+        # Show user the current item information
+        current_item_attributes = """
+        Current Price is: {}
+        Current quantity of item is: {}
+        Current Item Name: {}
+        Current Item Description: {}
+        Current Item Warranty Period (years) is: {} \n""".format(item_to_edit.get_item_price(), item_to_edit.get_quantity(),
+                                                              item_to_edit.get_item_name(), item_to_edit.get_item_description(),
+                                                              item_to_edit.get_item_warranty())
+        print(current_item_attributes)
+
         # Update the attributes
         item_to_edit.set_item_price(get_user_input_float("Please enter the updated price: "))
         item_to_edit.set_quantity(get_user_input_int("Please enter the updated stock quantity: "))
