@@ -155,12 +155,15 @@ def get_user_input_string(text_prompt):
     # Keep asking for input until user enters a value
     while continue_loop:
         user_in = input(text_prompt)
-        input_not_empty = user_in != None and user_in != ""
+        input_not_empty = user_in is not None and user_in != ""
+        input_contains_comma = "," in user_in
 
-        if input_not_empty:
+        if input_not_empty and not input_contains_comma:
             continue_loop = False
-        else:
+        if not input_not_empty:
             print("Your input cannot be empty! \n")
+        if input_contains_comma:
+            print("Your input cannot contain comma! \n")
 
     return user_in
 
