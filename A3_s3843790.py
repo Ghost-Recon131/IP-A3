@@ -30,10 +30,9 @@ class StockItem:
 
     # This method prints the object's values
     def display_item_attributes(self):
-        # item_attributes = self.item_id + " | " + str(self.item_price) + " | " + str(self.quantity) + " | " \
-        #                   + self.item_name + " | " + self.item_description + " | " + self.item_warranty
-        print(self.item_id, self.item_price, self.quantity, self.item_name, self.item_description, self.item_warranty,
-              end="")
+        item_attributes = self.item_id + " " + str(self.item_price) + " " + str(self.quantity) + " " \
+                          + self.item_name + " " + self.item_description + " " + str(self.item_warranty)
+        return item_attributes
 
     # Getters
     def get_item_id(self):
@@ -184,7 +183,7 @@ def show_item_info():
     global stock_dictionary
     item_id = get_user_input_string("Please enter the item ID: ")
     if check_item_exists(item_id):
-        stock_dictionary.get(item_id).display_item_attributes()
+        print(stock_dictionary.get(item_id).display_item_attributes(), end="")
     else:
         print("Entered item ID does not exist")
 
@@ -226,9 +225,16 @@ def show_all_items_info():
 
     # Referenced [1], sorts the items based on the item name
     stock_list.sort(key=lambda x: x.item_name)
-    print("Displaying all items in inventory (Sorted alphabetically by item name not item ID)")
+
+    # Store list of full item details, so we can reformat the output text
+    item_details_list = []
     for stock in stock_list:
-        stock.display_item_attributes()
+        item_details_list.append(stock.display_item_attributes().strip("\n"))
+
+    # Now print the formatted list of full item details
+    print("Displaying all items in inventory (Sorted alphabetically by item name not item ID)")
+    for item_detail in item_details_list:
+        print(item_detail)
 
 
 # This function tries to add a new item to stock
@@ -258,9 +264,27 @@ def add_new_item():
 
 # This function tries to update an existing item
 def update_item_info():
+    global stock_dictionary
     item_id = get_user_input_string("Please enter the item ID: ")
-    # TODO
-    print("Updated item! " + item_id)
+    continue_process = False
+    if check_item_exists(item_id):
+        continue_process = True
+    else:
+        print("No item found with this ID")
+
+    if continue_process:
+        # Get the object from the dictionary
+        item_to_edit = stock_dictionary.get(item_id)
+
+        # Update the attributes
+        item_to_edit.set_item_price(get_user_input_float("Please enter the updated price: "))
+        item_to_edit.set_quantity(get_user_input_int("Please enter the updated stock quantity: "))
+        item_to_edit.set_item_name(get_user_input_string("Please enter the updated item name: "))
+        item_to_edit.set_item_description(get_user_input_string("Please enter the updated item description: "))
+        item_to_edit.set_item_warranty(get_user_input_int("Please enter the updated warranty period (integer value in years): "))
+
+        # Save back to dictionary
+        stock_dictionary[item_id] = item_to_edit
 
 
 # This function tries to remove an existing item
