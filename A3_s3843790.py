@@ -97,6 +97,8 @@ def read_stock(file_name):
             # uses item ID as dictionary key, then object as the value
             stock_dictionary[data[0]] = stock_object
 
+        # close the file handler
+        file_handler.close()
         # prints the column structure & item attributes
         heading = "----------------------------------------------\n" \
                   "Loading Original Data\n" \
@@ -346,7 +348,7 @@ def main_menu():
 
         user_choice = get_user_input_int("Please enter an integer to select an option: ")
 
-        # Check that the user's entered int is part of the avaliable options in the menu
+        # Check that the user's entered int is part of the available options in the menu
         if validate_userinput_int(user_choice, 7):
             if user_choice == 1:
                 show_item_info()
