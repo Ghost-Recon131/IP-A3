@@ -1,0 +1,5 @@
+item_id, item_price, quantity, item_name, item_description, item_warranty
+100-100000061WOF, 550, 5, AMD Ryzen 9 5900X, AMD Zen 3 12 Core 24 Thread CPU, 3
+BX8071512700K, 600, 2, Intel i7 12700K, Intel Core i7 12700K 12 Cores 20 thread processor, 3
+RTX3070-O8G-NOCTUA, 1300, 1, ASUS GeForce RTX 3070 Noctua Edition, ASUS GeForce RTX 3070 Noctua OC Edition 8GB GPU, 3
+NH-D15 CHROMAX.BLACK, 200, 10, Noctua NH-D15 chromax, Noctua NH-D15 chromax.black Dual Tower CPU Cooler, 6
