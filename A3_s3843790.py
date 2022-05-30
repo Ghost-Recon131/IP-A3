@@ -180,11 +180,27 @@ def validate_userinput_int(user_input, max_option):
 def show_item_info():
     global stock_dictionary
     item_id = get_user_input_string("Please enter the item ID: ")
+    if check_item_exists(item_id):
+        stock_dictionary.get(item_id).display_item_attributes()
+    else:
+        print("Entered item ID does not exist")
+
+
+# Check if an item with a given item_id exists, then return boolean value
+def check_item_exists(item_id):
+    global stock_dictionary
+    name = None
+    ret_value = None
 
     try:
-        stock_dictionary.get(item_id).display_item_attributes()
+        name = stock_dictionary.get(item_id).get_item_id()
     except:
-        print("Entered item ID does not exist")
+        ret_value = False
+
+    if name is not None:
+        ret_value = True
+
+    return ret_value
 
 
 # This functions shows the item ID of all items loaded in memory
@@ -215,10 +231,26 @@ def show_all_items_info():
 # This function tries to add a new item to stock
 def add_new_item():
     new_item_id = get_user_input_string("Please enter the item ID: ")
-    new_item_price = get_user_input_float("Please enter the item price: ")
-    new_item_quantity = get_user_input_int("Please enter the item quantity: ")
-    new_item_name = get_user_input_string("Please enter the item name: ")
-    new_item_description = get_user_input_string("Please enter the item description: ")
+
+    continue_process = False
+    if check_item_exists(new_item_id):
+        print("An item with this ID already exists!")
+    else:
+        continue_process = True
+
+    if continue_process:
+        new_item_price = get_user_input_float("Please enter the item price: ")
+        new_item_quantity = get_user_input_int("Please enter the item quantity: ")
+        new_item_name = get_user_input_string("Please enter the item name: ")
+        new_item_description = get_user_input_string("Please enter the item description: ")
+        new_item_warranty = get_user_input_int("Please enter the warranty period (integer value in years): ")
+
+        # Create the object then store into dictionary
+        new_stock_object = StockItem(new_item_id, new_item_price, new_item_quantity, new_item_name, new_item_description, new_item_warranty)
+        stock_dictionary[new_item_id] = new_stock_object
+        print("Item added successfully!", new_stock_object.get_item_id(), new_stock_object.item_price,
+              new_stock_object.get_quantity(), new_stock_object.get_item_name(),
+              new_stock_object.get_item_description(), new_stock_object.get_item_warranty())
 
 
 # This function tries to update an existing item
