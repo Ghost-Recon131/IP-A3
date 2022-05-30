@@ -16,6 +16,9 @@ Used Scorptec to get some product ID and pricing
 # Global dictionary for storing stock
 stock_dictionary = {}
 
+# Global variable to store column structure
+column_line = None
+
 
 # Define class for stock objects
 class StockItem:
@@ -29,9 +32,15 @@ class StockItem:
         self.item_warranty = item_warranty
 
     # This method prints the object's values
-    def display_item_attributes(self):
+    def get_all_item_attributes(self):
         item_attributes = self.item_id + " " + str(self.item_price) + " " + str(self.quantity) + " " \
                           + self.item_name + " " + self.item_description + " " + str(self.item_warranty)
+        return item_attributes
+
+    # This method helps prepare for outputing csv values
+    def prepare_csv_output(self):
+        item_attributes = self.item_id + ", " + str(self.item_price) + ", " + str(self.quantity) + ", " \
+                          + self.item_name + ", " + self.item_description + ", " + str(self.item_warranty)
         return item_attributes
 
     # Getters
@@ -82,6 +91,7 @@ def get_inventory_value():
 # Read the stock file and initiate the data structures
 def read_stock(file_name):
     global stock_dictionary
+    global column_line
 
     # attempt to read data from file
     try:
@@ -91,7 +101,7 @@ def read_stock(file_name):
         column_line = file_handler.readline()
         for line in file_handler:
             # split the line by ',' then create a new stock_item object with the various attributes
-            data = line.split(", ")
+            data = line.rstrip('\n').split(", ")
             stock_object = StockItem(data[0], float(data[1]), int(data[2]), data[3], data[4], data[5])
 
             # uses item ID as dictionary key, then object as the value
@@ -114,8 +124,24 @@ def read_stock(file_name):
 
 # Export the changes to a given filename
 def save_changes_and_exit(file_name):
-    # TODO
-    print("Exported file")
+    global stock_dictionary
+    global column_line
+
+    try:
+        output_file_handler = open(file_name, "w")
+
+        # Write the column structure
+        output_file_handler.write(column_line)
+
+        # Loop through dictionary and write all items to file
+        for item in stock_dictionary:
+            output_file_handler.write(stock_dictionary[item].prepare_csv_output())
+            # Write new line to separate items
+            output_file_handler.write('\n')
+
+        output_file_handler.close()
+    except:
+        print("Failed to export file")
 
 
 # This function gets user user_input & validates it is a correct integer
@@ -229,14 +255,8 @@ def show_all_items_info():
     stock_list.sort(key=lambda x: x.item_name)
 
     # Store list of full item details, so we can reformat the output text
-    item_details_list = []
     for stock in stock_list:
-        item_details_list.append(stock.display_item_attributes().strip("\n"))
-
-    # Now print the formatted list of full item details
-    print("Displaying all items in inventory (Sorted alphabetically by item name not item ID)")
-    for item_detail in item_details_list:
-        print(item_detail)
+        print(stock.get_all_item_attributes())
 
 
 # This function tries to add a new item to stock
@@ -257,7 +277,8 @@ def add_new_item():
         new_item_warranty = get_user_input_int("Please enter the warranty period (integer value in years): ")
 
         # Create the object then store into dictionary
-        new_stock_object = StockItem(new_item_id, new_item_price, new_item_quantity, new_item_name, new_item_description, new_item_warranty)
+        new_stock_object = StockItem(new_item_id, new_item_price, new_item_quantity, new_item_name,
+                                     new_item_description, new_item_warranty)
         stock_dictionary[new_item_id] = new_stock_object
         print("Item added successfully!", new_stock_object.get_item_id(), new_stock_object.item_price,
               new_stock_object.get_quantity(), new_stock_object.get_item_name(),
@@ -283,7 +304,8 @@ def update_item_info():
         item_to_edit.set_quantity(get_user_input_int("Please enter the updated stock quantity: "))
         item_to_edit.set_item_name(get_user_input_string("Please enter the updated item name: "))
         item_to_edit.set_item_description(get_user_input_string("Please enter the updated item description: "))
-        item_to_edit.set_item_warranty(get_user_input_int("Please enter the updated warranty period (integer value in years): "))
+        item_to_edit.set_item_warranty(
+            get_user_input_int("Please enter the updated warranty period (integer value in years): "))
 
         # Save back to dictionary
         stock_dictionary[item_id] = item_to_edit
