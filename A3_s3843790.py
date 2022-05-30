@@ -310,9 +310,11 @@ def update_item_info():
         Current quantity of item is: {}
         Current Item Name: {}
         Current Item Description: {}
-        Current Item Warranty Period (years) is: {} \n""".format(item_to_edit.get_item_price(), item_to_edit.get_quantity(),
-                                                              item_to_edit.get_item_name(), item_to_edit.get_item_description(),
-                                                              item_to_edit.get_item_warranty())
+        Current Item Warranty Period (years) is: {} \n""".format(item_to_edit.get_item_price(),
+                                                                 item_to_edit.get_quantity(),
+                                                                 item_to_edit.get_item_name(),
+                                                                 item_to_edit.get_item_description(),
+                                                                 item_to_edit.get_item_warranty())
         print(current_item_attributes)
 
         # Update the attributes
@@ -362,7 +364,6 @@ def confirm_exit():
         else:
             print("Invalid input! y/n only! \n")
     return ret_value
-
 
 
 # Main menu of the program
