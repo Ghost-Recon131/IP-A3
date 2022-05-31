@@ -1,5 +1,6 @@
 # Other files
 updated_A3_s3843790_stock.txt
+A3_s3843790.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -235,4 +236,4 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
-/A3_s384379.zip
+
