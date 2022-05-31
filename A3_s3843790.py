@@ -102,7 +102,7 @@ def read_stock(file_name):
         for line in file_handler:
             # split the line by ',' then create a new stock_item object with the various attributes
             data = line.rstrip('\n').split(", ")
-            stock_object = StockItem(data[0], float(data[1]), int(data[2]), data[3], data[4], data[5])
+            stock_object = StockItem(data[0], float(data[1]), int(data[2]), data[3], data[4], int(data[5]))
 
             # uses item ID as dictionary key, then object as the value
             stock_dictionary[data[0]] = stock_object
