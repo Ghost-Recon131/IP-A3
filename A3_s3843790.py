@@ -84,7 +84,7 @@ def get_inventory_value():
     global stock_dictionary
     value = 0.0
     for item in stock_dictionary:
-        value += stock_dictionary[item].get_item_price()
+        value += stock_dictionary[item].get_item_price() * stock_dictionary[item].get_quantity()
     return value
 
 
@@ -128,6 +128,7 @@ def save_changes_and_exit(file_name):
     global column_line
 
     show_all_items_info()
+    print("Current stock value:", get_inventory_value())
     print("\nPlease check current stock values and confirm if you want to exit. \n")
     ret_value = confirm_exit()
 
@@ -391,7 +392,6 @@ def main_menu():
         show_all_items_id()
 
         user_choice = get_user_input_int("Please enter an integer to select an option: ")
-
         # Check that the user's entered int is part of the available options in the menu
         if validate_userinput_int(user_choice, 7):
             if user_choice == 1:
