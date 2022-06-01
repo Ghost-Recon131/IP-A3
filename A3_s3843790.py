@@ -109,7 +109,8 @@ def read_stock(file_name):
 
         # close the file handler
         file_handler.close()
-        # prints the column structure & item attributes
+
+        # Show heading & item ID of loaded files
         heading = "----------------------------------------------\n" \
                   "Loading Original Data\n" \
                   "----------------------------------------------"
@@ -117,7 +118,16 @@ def read_stock(file_name):
         print("Loading data from file:", file_name)
         print("Column titles in loaded file is:", column_line, end="")
         show_all_items_id()
-        print("Current stock value: $", get_inventory_value(), end="")
+
+        # Show stock value
+        print("Current stock value: $", get_inventory_value())
+
+        # Show full details of loaded items
+        original_data_heading = "----------------------------------------------\n" \
+                                "Showing Original Data\n" \
+                                "----------------------------------------------"
+        print(original_data_heading)
+        show_all_items_info()
     except:
         print("File may be corrupted or contains invalid values")
 
@@ -261,6 +271,7 @@ def show_all_items_info():
     stock_list.sort(key=lambda x: x.item_name)
 
     # Store list of full item details, so we can reformat the output text
+    print("\nShowing all inventory items sorted alphabetically by item name:")
     for stock in stock_list:
         print(stock.get_all_item_attributes())
 
